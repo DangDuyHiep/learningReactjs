@@ -1,74 +1,56 @@
-import React , {Component} from 'react';
-import './App.css';
-//import Product from './components/Header';
-import {Product} from './components/Product';
-
+import React, { Component } from 'react';
+import ColorPicker from './components/ColorPicker';
+import SizeSetting from './components/SizeSetting';
+import Reset from './components/Reset';
+import Result from './components/Result';
 
 class App extends Component {
-  onClick(){
-    console.log("cc");
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: 'red',
+      fontSize: 12,
+    };
+    //this.onSetColor = this.onSetColor.bind(this);
   }
-  render(){
-    var products=[
-      {
-          id: 1,
-          name : "Iphone 6 plus",
-          price : 60000,
-          status : true
-      },
 
-      {
-        id: 2,
-        name : "Samsung",
-        price : 60000,
-        status : true
-      },
-
-      {
-        id: 3,
-        name : "Sony",
-        price : 60000,
-        status : true
-      },
-      {
-        id: 4,
-        name : "Xiaomi",
-        price : 60000,
-        status : false
-      },
-    ];
-
-    let elements = products.map((product, index) => {
-      if(product.status == true){
-        return(
-            <Product
-              key =  {product.id}
-              name = {product.name}
-              price= {product.price}
-            />
-        );
-      }
+  onReceiveColor = (param) => {
+    this.setState({
+      color: param,
     });
+  };
+
+  onReSize = (value) => {
+      this.setState({
+        fontSize: (this.state.fontSize + value >= 8 && this.state.fontSize + value <=30) 
+        ? this.state.fontSize + value
+        : this.state.fontSize
+      });
+  };
+
+  onResetDefault = (value)=>{
+    if(value === true)
+    {
+      this.setState({
+        color: 'red',
+        fontSize: 12,
+      });
+    }
+  }
+
+  render() {
     return (
-      <div>
-          <nav className="navbar navbar-inverse">
-            <a className="navbar-brand">Props</a>
-          </nav>
-          <div className="container">
-            <div className="row">
-                <div className="col-12">
-                  {elements}
-                </div>
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                  <button type="button" className="btn btn-default" onClick={ this.onClick }>
-                    Click me!
-                  </button>
-                </div>
-            </div>
+      <div className='container' style={{ marginTop: 50 }}>
+        <div className='row'>
+          <ColorPicker color={this.state.color} onReceiveColor={this.onReceiveColor} />
+          <div className='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+            <SizeSetting size={this.state.fontSize} onReSize={this.onReSize} />
+            <Reset onResetDefault={this.onResetDefault}/>
           </div>
+          <Result color={this.state.color} size={this.state.fontSize} />
+        </div>
       </div>
     );
-  };
+  }
 }
-
 export default App;
